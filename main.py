@@ -28,6 +28,7 @@ class Product:
     thirdPartyNewFormattedPrice=""
     thirdPartyNewPriceCurrency=""
     currency=""
+    locale=""
     type=""
     def f(self):
         return 'hello world'
@@ -91,6 +92,38 @@ def teardown_request(exception):
 def entry_point():
     return render_template('index.html')
     
+    
+@app.route('/product/<locale>/<asin>')
+def show_product(locale, asin):
+    api = API(locale=locale)
+    result = api.item_lookup(asin, ResponseGroup="ItemIds, ItemAttributes, Images, OfferSummary, Offers")
+    niceProduct = Product()
+    for product in result.Items.Item:      
+        niceProduct.title = product.ItemAttributes.Title
+        niceProduct.ASIN = product.ASIN.text
+        
+        niceProduct.imageUrl = product.MediumImage.URL               
+        
+        try:
+            niceProduct.newPrice = float(product.OfferSummary.LowestNewPrice.Amount)/100
+            niceProduct.newFormattedPrice = product.OfferSummary.LowestNewPrice.FormattedPrice
+            niceProduct.newPriceCurrency = product.OfferSummary.LowestNewPrice.CurrencyCode
+        except:
+            pass
+
+        try:
+            niceProduct.usedPrice = float(product.OfferSummary.LowestUsedPrice.Amount)/100
+            niceProduct.usedFormattedPrice = product.OfferSummary.LowestUsedPrice.FormattedPrice
+            niceProduct.usedPriceCurrency = product.OfferSummary.LowestUsedPrice.CurrencyCode
+        except:
+            pass
+            
+        niceProduct.type = product.ItemAttributes.ProductGroup
+        niceProduct.region =  getRegionFromUrl(product.DetailPageURL.text).upper() #product.ItemAttributes.RegionCode
+        niceProduct.model = product.ItemAttributes.Model
+
+    return render_template('product.html', product = niceProduct)
+    
 @app.route('/search', methods=['GET'])
 def search():
     print "hello"
@@ -113,18 +146,15 @@ def search():
                 niceProduct.ASIN = product.ASIN.text
                 ASINList.append(niceProduct.ASIN)
                 
-                niceProduct.imageUrl = product.MediumImage.URL
+                niceProduct.imageUrl = product.MediumImage.URL               
                 
-                
-                #try:
-                #    niceProduct.newPrice = float(product.OfferSummary.LowestNewPrice.Amount)/100
-                #    niceProduct.newFormattedPrice = product.OfferSummary.LowestNewPrice.FormattedPrice
-                #    niceProduct.newPriceCurrency = product.OfferSummary.LowestNewPrice.CurrencyCode
-                #except:
-                #    pass
-                
-                
-                    
+                try:
+                    niceProduct.newPrice = float(product.OfferSummary.LowestNewPrice.Amount)/100
+                    niceProduct.newFormattedPrice = product.OfferSummary.LowestNewPrice.FormattedPrice
+                    niceProduct.newPriceCurrency = product.OfferSummary.LowestNewPrice.CurrencyCode
+                except:
+                    pass
+    
                 try:
                     niceProduct.usedPrice = float(product.OfferSummary.LowestUsedPrice.Amount)/100
                     niceProduct.usedFormattedPrice = product.OfferSummary.LowestUsedPrice.FormattedPrice
@@ -134,6 +164,7 @@ def search():
                     
                 niceProduct.type = product.ItemAttributes.ProductGroup
                 niceProduct.region =  getRegionFromUrl(product.DetailPageURL.text).upper() #product.ItemAttributes.RegionCode
+                niceProduct.locale =  getRegionFromUrl(product.DetailPageURL.text)
                 niceProduct.model = product.ItemAttributes.Model
                 niceProducts.append(niceProduct)
                 if not listed:
@@ -143,26 +174,26 @@ def search():
                 pass
                 #not a product
                 
-        res = api.item_lookup(*ASINList, MerchantId='Amazon', ResponseGroup = 'Offers')
+       # res = api.item_lookup(*ASINList, MerchantId='Amazon', ResponseGroup = 'Offers')
         
-        i = 0
-        listed = False
+       # i = 0
+       # listed = False
         
-        for amazonProduct in res.Items.Item:
-            print 'new amazon offer for ASIN : ', amazonProduct.ASIN
-            print '#########################################'
+       # for amazonProduct in res.Items.Item:
+          #  print 'new amazon offer for ASIN : ', amazonProduct.ASIN
+          #  print '#########################################'
             #print objectify.dump(amazonProduct)
-            try:
+          #  try:
                 #print 'not void!'
                 #for offer in amazonProduct.Offers:
-                print objectify.dump(amazonProduct)
-                niceProducts[i].newPrice = float(amazonProduct.OfferSummary.LowestNewPrice.Amount)/100
-                niceProducts[i].newFormattedPrice = amazonProduct.OfferSummary.LowestNewPrice.FormattedPrice
-                niceProducts[i].newPriceCurrency = amazonProduct.OfferSummary.LowestNewPrice.CurrencyCode
-                print 'price is : ', float(amazonProduct.OfferSummary.LowestNewPrice.Amount)/100
+          #      print objectify.dump(amazonProduct)
+          #      niceProducts[i].newPrice = float(amazonProduct.OfferSummary.LowestNewPrice.Amount)/100
+          #      niceProducts[i].newFormattedPrice = amazonProduct.OfferSummary.LowestNewPrice.FormattedPrice
+          #      niceProducts[i].newPriceCurrency = amazonProduct.OfferSummary.LowestNewPrice.CurrencyCode
+          #      print 'price is : ', float(amazonProduct.OfferSummary.LowestNewPrice.Amount)/100
                 
-            except Exception as inst:
-                print inst        
+          #  except Exception as inst:
+          #      print inst        
             #if not listed:
             #        print(objectify.dump(amazonProduct))
             #        listed = True
@@ -174,7 +205,7 @@ def search():
             ##    print 'ok price for : ', i
             ##except:
             #    pass
-            i+=1
+          #  i+=1
                
 
     except errors.AWSError, e:

@@ -2,37 +2,8 @@
 
 <div class="container">
 
-
-
-
-    <!-- Search box -->
-    <div class="row panel">
-        <div class="col-md-6">
-            <form id="search-form" action="/search" method="get" class="form-horizontal" accept-charset="utf-8">
-                <div class="input-group">
-                    <input id="search-box" name="q" required="True" class="form-control input-md" title="Search for products on Amazon." placeholder="Amazon URL, product name, or ASIN"
-                    type="text" value="{{ search_text }}">
-                    <span class="input-group-btn"><input class="btn btn-md btn-primary" type="submit" value="Search"></span>
-                </div>
-                <div class="text-center">
-
-                    <label class="radio-inline">
-                        <input id="US" type="radio" name="region" value="US" checked> US
-                    </label>
-
-                    <label class="radio-inline">
-                        <input id="CA" type="radio" name="region" value="CA"> CA
-                    </label>
-
-                    <label class="radio-inline">
-                        <input id="UK" type="radio" name="region" value="UK"> UK
-                    </label>
-
-                </div>
-            </form>
-        </div>
-    </div>
-    <!-- End Search box -->
+ {% include "searchbox.html" %}
+ 
     <div class="list-group">
         {% for product in products%}
 
@@ -58,7 +29,7 @@
                         <div class="col-md-2">
                             <br/>
                             <br/>
-                            <a class="btn btn-md btn-primary pull-right" href="/product/{{product.ASIN}}"><span class="glyphicon glyphicon-stats"></span> Track Now !</a>
+                            <a class="btn btn-md btn-primary pull-right" href="/product/{{product.locale}}/{{product.ASIN}}"><span class="glyphicon glyphicon-stats"></span> Track Now !</a>
                         </div>
                         <!--<div class="col-md-1"></div>-->
                     </div>

@@ -1,0 +1,172 @@
+ {% include "header.html" %}
+
+<div class="container">
+
+    {% include "searchbox.html" %}
+
+
+</div>
+<!-- /.container -->
+
+<div class="container">
+    <!-- Product description -->
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <a href="#" title="{{product.title}}" target="_blank"><img src="{{product.imageUrl}}" alt="Amazon Gift Card - Email -Generic Icons" /></a>
+        </div>
+
+        <div class="col-md-10">
+            <h4><a href="#" target="_blank">{{product.title}}</a></h4>
+            <div class="row">
+                <div class="col-md-9">
+                    <ul class="list-unstyled">
+                        <li><strong>In:</strong> {{product.type}}</li>
+                        <li><strong>Model:</strong> {{product.model}}</li>
+                        <li><strong>Region:</strong> {{product.region}}</li>
+                        <li><strong>ASIN:</strong> {{product.ASIN}}</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <br/>
+                    <br/>
+                    <a class="btn btn-lg btn-success" href="#" target="_blank"><span class="glyphicon glyphicon-shopping-cart"></span> &nbsp;Buy From Amazon</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End product description -->
+
+    <br>
+
+    <!-- Display the panels only if there's at least one price type that can be tracked -->
+
+    <!-- Set price alerts panel-->
+    <div class="row">
+        <div class="panel panel-default">
+            <div id="set-price-alerts" class="panel-heading"><strong>Set Price Alerts</strong></div>
+            <div class="panel-body">
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="new-price-form" name="save-alert-form" method="post" class="form-inline" role="form">
+                            <input type='hidden' name='csrfmiddlewaretoken' value='2MEIUPeZkAm4kFfpthHDdRBPvUldkpG1' />
+                            <div class="col-md-2">
+                                <p class="form-control-static"><strong>Best New Price</strong></p>
+                            </div>
+                            <div class="col-md-2">
+                                {% if product.newFormattedPrice != "" %}
+                                 <p class="form-control-static text-success price">{{product.newFormattedPrice}}</p>
+                                {% else %}
+                                 <p class="form-control-static text-success no-price">Not In Stock</p>
+                                {% endif %}
+                                
+                            </div>
+                            <div class="form-group col-md-3">
+                                <div class="input-group">
+                                    <label class="sr-only" for="target-price-new">Target Price</label>
+                                    <input type="hidden" name="price-type" value="amazon">
+                                    <div class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></div>
+                                    <input id="target-price-new" value="" type="number" step="any" name="target-price" class="form-control" placeholder="Target price"
+                                    required>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <div class="input-group">
+                                    <label class="sr-only" for="email-new">Email address</label>
+                                    <div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
+                                    <input id="email-new" type="email" name="email-address" class="form-control" value="" placeholder="Your email address"
+                                    required>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input id="new-save-alert-button" name="save-alert-button" class="btn btn-md btn-primary pull-right" type="submit" value="Save Alert">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="used-price-form" name="save-alert-form" method="post" class="form-inline" role="form">
+                            <input type='hidden' name='csrfmiddlewaretoken' value='2MEIUPeZkAm4kFfpthHDdRBPvUldkpG1' />
+                            <div class="col-md-2">
+                                <p class="form-control-static"><strong>3rd Party Used</strong></p>
+                            </div>
+                            <div class="col-md-2">
+                                 {% if product.usedFormattedPrice != "" %}
+                                 <p class="form-control-static text-success price">{{product.usedFormattedPrice}}</p>
+                                {% else %}
+                                <p class="form-control-static text-success no-price">Not In Stock</p>
+                                {% endif %}
+                                
+                            </div>
+                            <div class="form-group col-md-3">
+                                <div class="input-group">
+                                    <label class="sr-only" for="target-price-used">Target Price New</label>
+                                    <input type="hidden" name="price-type" value="new">
+                                    <div class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></div>
+                                    <input id="target-price-used" value="" type="number" step="any" name="target-price" class="form-control" placeholder="Target price"
+                                    required>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <div class="input-group">
+                                    <label class="sr-only" for="email-used">Email address</label>
+                                    <div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
+                                    <input id="email-used" type="email" name="email-address" class="form-control" value="" placeholder="Your email address" required>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input id="used-save-alert-button" name="save-alert-button" class="btn btn-md btn-primary pull-right" type="submit" value="Save Alert">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <br>
+
+            </div>
+        </div>
+    </div>
+    <!-- End set price alerts panel -->
+    
+    <!-- Price history panel -->
+    <div class="row">
+      <div class="panel panel-default">
+        <div id="price-history" class="panel-heading"><strong>Price History</strong></div>
+          <div class="panel-body">
+
+            <div class="row">
+              <div class="form-group">
+                <label class="col-md-2 control-label">Price Type</label>
+                <div class="col-md-4">
+                  <select id="price-type-select" class="form-control">
+                    
+                      <option value=amazon>New</option>
+                    
+                      <option value=new>Used</option>
+                    
+                  </select>
+                </div>
+              </div>
+            </div>
+
+           
+
+          </div>
+        </div>
+    </div>
+   <!-- End if a price exists -->
+  <!-- End price history panel -->
+
+</div>
+
+
+
+
+
+{% include "footer.html" %}
