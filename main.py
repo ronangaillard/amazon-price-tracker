@@ -32,7 +32,41 @@ class Product:
     def f(self):
         return 'hello world'
 
+def getRegionFromUrl(url):
+#DetailPageURL
+    urlExtension = url[18:21]
 
+    if urlExtension == 'fr/':
+        return 'fr'
+    elif urlExtension == 'co.':
+        if url[18:23] == 'co.uk':
+            return 'uk'
+        elif url[18:23] == 'co.jp':
+            return 'jp'  
+    elif urlExtension == 'com':
+        return 'us'
+    elif urlExtension == 'it/':
+        return 'it'
+    elif urlExtension == 'es/':
+        return 'es'
+    elif urlExtension == 'au/':
+        return 'au'
+    elif urlExtension == 'br/':
+        return 'br'
+    elif urlExtension == 'ca/':
+        return 'ca'
+    elif urlExtension == 'cn/':
+        return 'cn'
+    elif urlExtension == 'de/':
+        return 'de'
+    elif urlExtension == 'in/':
+        return 'in'
+    elif urlExtension == 'mx/':
+        return 'mx'
+    elif urlExtension == 'nl/':
+        return 'nl'
+        
+    return 'unknown'
 
 #Connects to the sqlite database
 def connect_db():
@@ -91,7 +125,7 @@ def search():
                     
                 niceProduct.type = product.ItemAttributes.ProductGroup
                 try:
-                    niceProduct.region =  products.region #product.ItemAttributes.RegionCode
+                    niceProduct.region =  getRegionFromUrl(product.DetailPageURL.text).upper() #product.ItemAttributes.RegionCode
                 except:
                     niceProduct.region = "?"
                 niceProduct.model = product.ItemAttributes.Model
