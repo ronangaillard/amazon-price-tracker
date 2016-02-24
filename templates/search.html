@@ -1,0 +1,58 @@
+ {% include "header.html" %}
+
+<div class="container">
+
+
+
+
+    <!-- Search box -->
+    <div class="row panel">
+        <div class="col-md-6">
+            <form id="search-form" action="/search" method="get" class="form-horizontal" accept-charset="utf-8">
+                <div class="input-group">
+                    <input id="search-box" name="q" required="True" class="form-control input-md" title="Search for products on Amazon." placeholder="Amazon URL, product name, or ASIN"
+                    type="text" value="{{ search_text }}">
+                    <span class="input-group-btn"><input class="btn btn-md btn-primary" type="submit" value="Search"></span>
+                </div>
+                <div class="text-center">
+
+                    <label class="radio-inline">
+                        <input id="US" type="radio" name="region" value="US" checked> US
+                    </label>
+
+                    <label class="radio-inline">
+                        <input id="CA" type="radio" name="region" value="CA"> CA
+                    </label>
+
+                    <label class="radio-inline">
+                        <input id="UK" type="radio" name="region" value="UK"> UK
+                    </label>
+
+                </div>
+            </form>
+        </div>
+    </div>
+        <!-- End Search box -->
+        
+   {% for product in products%}
+ 
+       
+       <div class="list-group">
+  <a href="#" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{product.title}}</h4>
+    <img src="{{product.imageUrl}}"/>
+    <p class="list-group-item-text">.{{product.ASIN}}.</p>
+  </a>
+</div>
+   
+   {%endfor%}
+
+
+
+</div>
+<!-- /.container -->
+
+
+
+
+{% include "footer.html" %}

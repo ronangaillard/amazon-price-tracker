@@ -1,0 +1,62 @@
+
+    
+{% include "header.html" %}
+
+    <div class="container">
+
+
+        <div class="starter-template">
+
+            <div class="col-md-6 col-md-offset-3">
+
+                <h1>Squirrel Price Alerts</h1>
+
+                <br>
+                <br>
+
+                <form id="search-form" action="/search" method="get" accept-charset="utf-8">
+                    <div class="input-group">
+                        <input id="search-box" name="q" autofocus="True" required="True" class="form-control input-lg" title="Search for products on Amazon."
+                        placeholder="Amazon URL, product name, or ASIN" type="text">
+                        <span class="input-group-btn"><input class="btn btn-lg btn-primary" type="submit" value="Search"></span>
+                    </div>
+                    <div class="panel-body text-center">
+
+                        <label class="radio-inline">
+                            <input id="US" type="radio" name="region" value="US" checked> US
+                        </label>
+
+                        <label class="radio-inline">
+                            <input id="CA" type="radio" name="region" value="CA"> CA
+                        </label>
+
+                        <label class="radio-inline">
+                            <input id="UK" type="radio" name="region" value="UK"> UK
+                        </label>
+                        
+                         <label class="radio-inline">
+                            <input id="FR" type="radio" name="region" value="FR"> FR
+                        </label>
+
+                    </div>
+                </form>
+
+                <h4 class="text-muted">
+         Get informed via email of the latest price changes on Amazon !
+        </h4>
+
+                <h5 class="text-muted">
+          Easy, free and no registration required.
+        </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+
+
+
+    
+{% include "footer.html" %}
