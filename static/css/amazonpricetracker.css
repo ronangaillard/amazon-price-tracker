@@ -50,3 +50,12 @@ body {
 code {
   font-size: 80%;
 }
+
+
+.price{
+    -webkit-text-fill-color: green;
+}
+
+.no-price{
+    -webkit-text-fill-color: gray;
+}

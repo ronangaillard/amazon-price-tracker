@@ -18,8 +18,17 @@ class Product:
     title = ""
     ASIN=""
     imageUrl=""
-    price=""
+    newPrice=""
+    newFormattedPrice=""
+    newPriceCurrency=""
+    usedPrice=""
+    usedFormattedPrice=""
+    usedPriceCurrency=""
+    thirdPartyNewPrice=""
+    thirdPartyNewFormattedPrice=""
+    thirdPartyNewPriceCurrency=""
     currency=""
+    type=""
     def f(self):
         return 'hello world'
 
@@ -55,7 +64,7 @@ def search():
     listed = False
     try:
         api = API(locale='fr')
-        products = api.item_search('All', Keywords=search_text, paginate=False, ResponseGroup="ItemIds, ItemAttributes, Images")
+        products = api.item_search('All', Keywords=search_text, paginate=False, ResponseGroup="ItemIds, ItemAttributes, Images, OfferSummary")
         
         niceProducts = []
   
@@ -66,6 +75,26 @@ def search():
                 niceProduct.title = product.ItemAttributes.Title
                 niceProduct.ASIN = product.ASIN.text
                 niceProduct.imageUrl = product.MediumImage.URL
+                try:
+                    niceProduct.newPrice = float(product.OfferSummary.LowestNewPrice.Amount)/100
+                    niceProduct.newFormattedPrice = product.OfferSummary.LowestNewPrice.FormattedPrice
+                    niceProduct.newPriceCurrency = product.OfferSummary.LowestNewPrice.CurrencyCode
+                except:
+                    pass
+                    
+                try:
+                    niceProduct.usedPrice = float(product.OfferSummary.LowestUsedPrice.Amount)/100
+                    niceProduct.usedFormattedPrice = product.OfferSummary.LowestUsedPrice.FormattedPrice
+                    niceProduct.usedPriceCurrency = product.OfferSummary.LowestUsedPrice.CurrencyCode
+                except:
+                    pass
+                    
+                niceProduct.type = product.ItemAttributes.ProductGroup
+                try:
+                    niceProduct.region =  products.region #product.ItemAttributes.RegionCode
+                except:
+                    niceProduct.region = "?"
+                niceProduct.model = product.ItemAttributes.Model
                 niceProducts.append(niceProduct)
                 if not listed:
                     print(objectify.dump(product))
@@ -88,9 +117,3 @@ if __name__ == '__main__':
     app.secret_key = 'ssssshhhhh'
     app.run(debug=True)
     
-    #  {% for product in products %}
-     #<div class="row panel">
-     #<p><strong>{{product.title}}</strong> : {{product.price_and_currency}}
-     #    </p>
-     #</div>
-     #  {% endfor %}

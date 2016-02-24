@@ -32,20 +32,84 @@
             </form>
         </div>
     </div>
-        <!-- End Search box -->
-        
-   {% for product in products%}
- 
-       
-       <div class="list-group">
-  <a href="#" class="list-group-item active">
-    <h4 class="list-group-item-heading">{{product.title}}</h4>
-    <img src="{{product.imageUrl}}"/>
-    <p class="list-group-item-text">.{{product.ASIN}}.</p>
-  </a>
-</div>
-   
-   {%endfor%}
+    <!-- End Search box -->
+    <div class="list-group">
+        {% for product in products%}
+
+
+
+        <div class="list-group-item">
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="{{product.imageUrl}}" style="height: auto;max-width: 100%;" />
+                </div>
+
+                <div class="col-md-6">
+                    <h4 class="list-group-item-heading">{{product.title}}</h4>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <br/>
+                            <p class="list-group-item-text"><strong>In:</strong> {{product.type}}</p>
+                            <p class="list-group-item-text"><strong>Model:</strong> {{product.model}}</p>
+                            <p class="list-group-item-text"><strong>Region:</strong> {{product.region}}</p>
+                            <p class="list-group-item-text"><strong>ASIN:</strong> {{product.ASIN}}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <a class="btn btn-md btn-primary pull-right" href="/product/{{product.ASIN}}"><span class="fa fa-mail-forward"></span>Track Now !</a>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Price Type</th>
+                                <th>Current Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Amazon</td>
+                                {% if product.newFormattedPrice != "" %}
+                                <td class="price">{{product.newFormattedPrice}}</td>
+                                {% else %}
+                                <td class="no-price">Not In Stock</td>
+                                {% endif %}
+                            </tr>
+
+                            <tr>
+                                <td>3rd Party New</td>
+                                {% if product.thirdPartyNewFormattedPrice != "" %}
+                                <td class="price">{{product.thirdPartyNewFormattedPrice}}</td>
+                                {% else %}
+                                <td class="no-price">Not In Stock</td>
+                                {% endif %}
+                            </tr>
+
+                            <tr>
+                                <td>3rd Party Used</td>
+                                {% if product.usedFormattedPrice != "" %}
+                                <td class="price">{{product.usedFormattedPrice}}</td>
+                                {% else %}
+                                <td class="no-price">Not In Stock</td>
+                                {% endif %}
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+
+
+        {%endfor%}
+    </div>
 
 
 
