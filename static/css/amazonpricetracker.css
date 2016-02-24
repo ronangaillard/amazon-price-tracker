@@ -54,6 +54,7 @@ code {
 
 .price{
     -webkit-text-fill-color: green;
+    font-weight: bold;
 }
 
 .no-price{

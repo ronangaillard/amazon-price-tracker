@@ -68,6 +68,8 @@ def getRegionFromUrl(url):
         
     return 'unknown'
 
+
+
 #Connects to the sqlite database
 def connect_db():
 	return sqlite3.connect(app.config['DATABASE'])
@@ -95,12 +97,13 @@ def search():
     search_text = request.args['q'] 
     region = request.args['region']
 
-    listed = False
+    listed = True
     try:
-        api = API(locale='fr')
-        products = api.item_search('All', Keywords=search_text, paginate=False, ResponseGroup="ItemIds, ItemAttributes, Images, OfferSummary")
+        api = API(locale='us')
+        products = api.item_search('All', Keywords=search_text, paginate=False, ResponseGroup="ItemIds, ItemAttributes, Images, OfferSummary, Offers")
         
         niceProducts = []
+        ASINList = []
   
         
         for product in products.Items.Item:
@@ -108,13 +111,19 @@ def search():
                 niceProduct = Product()
                 niceProduct.title = product.ItemAttributes.Title
                 niceProduct.ASIN = product.ASIN.text
+                ASINList.append(niceProduct.ASIN)
+                
                 niceProduct.imageUrl = product.MediumImage.URL
-                try:
-                    niceProduct.newPrice = float(product.OfferSummary.LowestNewPrice.Amount)/100
-                    niceProduct.newFormattedPrice = product.OfferSummary.LowestNewPrice.FormattedPrice
-                    niceProduct.newPriceCurrency = product.OfferSummary.LowestNewPrice.CurrencyCode
-                except:
-                    pass
+                
+                
+                #try:
+                #    niceProduct.newPrice = float(product.OfferSummary.LowestNewPrice.Amount)/100
+                #    niceProduct.newFormattedPrice = product.OfferSummary.LowestNewPrice.FormattedPrice
+                #    niceProduct.newPriceCurrency = product.OfferSummary.LowestNewPrice.CurrencyCode
+                #except:
+                #    pass
+                
+                
                     
                 try:
                     niceProduct.usedPrice = float(product.OfferSummary.LowestUsedPrice.Amount)/100
@@ -124,10 +133,7 @@ def search():
                     pass
                     
                 niceProduct.type = product.ItemAttributes.ProductGroup
-                try:
-                    niceProduct.region =  getRegionFromUrl(product.DetailPageURL.text).upper() #product.ItemAttributes.RegionCode
-                except:
-                    niceProduct.region = "?"
+                niceProduct.region =  getRegionFromUrl(product.DetailPageURL.text).upper() #product.ItemAttributes.RegionCode
                 niceProduct.model = product.ItemAttributes.Model
                 niceProducts.append(niceProduct)
                 if not listed:
@@ -136,6 +142,40 @@ def search():
             except:
                 pass
                 #not a product
+                
+        res = api.item_lookup(*ASINList, MerchantId='Amazon', ResponseGroup = 'Offers')
+        
+        i = 0
+        listed = False
+        
+        for amazonProduct in res.Items.Item:
+            print 'new amazon offer for ASIN : ', amazonProduct.ASIN
+            print '#########################################'
+            #print objectify.dump(amazonProduct)
+            try:
+                #print 'not void!'
+                #for offer in amazonProduct.Offers:
+                print objectify.dump(amazonProduct)
+                niceProducts[i].newPrice = float(amazonProduct.OfferSummary.LowestNewPrice.Amount)/100
+                niceProducts[i].newFormattedPrice = amazonProduct.OfferSummary.LowestNewPrice.FormattedPrice
+                niceProducts[i].newPriceCurrency = amazonProduct.OfferSummary.LowestNewPrice.CurrencyCode
+                print 'price is : ', float(amazonProduct.OfferSummary.LowestNewPrice.Amount)/100
+                
+            except Exception as inst:
+                print inst        
+            #if not listed:
+            #        print(objectify.dump(amazonProduct))
+            #        listed = True
+            #try:
+            ##    print 'set price : ', i, ', ASIN : ', amazonProduct.ASIN
+            ##    niceProducts[i].newPrice = float(amazonProduct.ItemAttributes.ListPrice.Amount)/100
+            ##    niceProducts[i].newFormattedPrice = amazonProduct.ItemAttributes.ListPrice.FormattedPrice
+            ##    niceProducts[i].newPriceCurrency = amazonProduct.ItemAttributes.ListPrice.CurrencyCode
+            ##    print 'ok price for : ', i
+            ##except:
+            #    pass
+            i+=1
+               
 
     except errors.AWSError, e:
         print 'Amazon complained about yout request!'
