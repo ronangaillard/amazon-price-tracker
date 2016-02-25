@@ -51,22 +51,21 @@
                 <div class="row">
                     <div class="col-md-12">
                         <form id="new-price-form" name="save-alert-form" method="post" class="form-inline" role="form">
-                            <input type='hidden' name='csrfmiddlewaretoken' value='2MEIUPeZkAm4kFfpthHDdRBPvUldkpG1' />
                             <div class="col-md-2">
                                 <p class="form-control-static"><strong>Best New Price</strong></p>
                             </div>
                             <div class="col-md-2">
                                 {% if product.newFormattedPrice != "" %}
-                                 <p class="form-control-static text-success price">{{product.newFormattedPrice}}</p>
+                                <p class="form-control-static text-success price">{{product.newFormattedPrice}}</p>
                                 {% else %}
-                                 <p class="form-control-static text-success no-price">Not In Stock</p>
+                                <p class="form-control-static text-success no-price">Not In Stock</p>
                                 {% endif %}
-                                
+
                             </div>
                             <div class="form-group col-md-3">
                                 <div class="input-group">
                                     <label class="sr-only" for="target-price-new">Target Price</label>
-                                    <input type="hidden" name="price-type" value="amazon">
+                                    <input type="hidden" name="price-type" value="new">
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></div>
                                     <input id="target-price-new" value="" type="number" step="any" name="target-price" class="form-control" placeholder="Target price"
                                     required>
@@ -76,8 +75,7 @@
                                 <div class="input-group">
                                     <label class="sr-only" for="email-new">Email address</label>
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
-                                    <input id="email-new" type="email" name="email-address" class="form-control" value="" placeholder="Your email address"
-                                    required>
+                                    <input id="email-new" type="email" name="email-address" class="form-control" value="" placeholder="Your email address" required>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -92,22 +90,21 @@
                 <div class="row">
                     <div class="col-md-12">
                         <form id="used-price-form" name="save-alert-form" method="post" class="form-inline" role="form">
-                            <input type='hidden' name='csrfmiddlewaretoken' value='2MEIUPeZkAm4kFfpthHDdRBPvUldkpG1' />
                             <div class="col-md-2">
                                 <p class="form-control-static"><strong>3rd Party Used</strong></p>
                             </div>
                             <div class="col-md-2">
-                                 {% if product.usedFormattedPrice != "" %}
-                                 <p class="form-control-static text-success price">{{product.usedFormattedPrice}}</p>
+                                {% if product.usedFormattedPrice != "" %}
+                                <p class="form-control-static text-success price">{{product.usedFormattedPrice}}</p>
                                 {% else %}
                                 <p class="form-control-static text-success no-price">Not In Stock</p>
                                 {% endif %}
-                                
+
                             </div>
                             <div class="form-group col-md-3">
                                 <div class="input-group">
-                                    <label class="sr-only" for="target-price-used">Target Price New</label>
-                                    <input type="hidden" name="price-type" value="new">
+                                    <label class="sr-only" for="target-price-used">Target Price</label>
+                                    <input type="hidden" name="price-type" value="used">
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></div>
                                     <input id="target-price-used" value="" type="number" step="any" name="target-price" class="form-control" placeholder="Target price"
                                     required>
@@ -133,35 +130,35 @@
         </div>
     </div>
     <!-- End set price alerts panel -->
-    
+
     <!-- Price history panel -->
     <div class="row">
-      <div class="panel panel-default">
-        <div id="price-history" class="panel-heading"><strong>Price History</strong></div>
-          <div class="panel-body">
+        <div class="panel panel-default">
+            <div id="price-history" class="panel-heading"><strong>Price History</strong></div>
+            <div class="panel-body">
 
-            <div class="row">
-              <div class="form-group">
-                <label class="col-md-2 control-label">Price Type</label>
-                <div class="col-md-4">
-                  <select id="price-type-select" class="form-control">
-                    
-                      <option value=amazon>New</option>
-                    
-                      <option value=new>Used</option>
-                    
-                  </select>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Price Type</label>
+                        <div class="col-md-4">
+                            <select id="price-type-select" class="form-control">
+
+                                <option value=amazon>New</option>
+
+                                <option value=new>Used</option>
+
+                            </select>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+
+
             </div>
-
-           
-
-          </div>
         </div>
     </div>
-   <!-- End if a price exists -->
-  <!-- End price history panel -->
+    <!-- End if a price exists -->
+    <!-- End price history panel -->
 
 </div>
 
