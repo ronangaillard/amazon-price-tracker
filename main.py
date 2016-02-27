@@ -92,7 +92,18 @@ def teardown_request(exception):
 def entry_point():
     return render_template('index.html')
     
+@app.route('/save_alert', methods=['POST', 'GET'])
+def save_alert(): #Penser a verifier que l'email n'existe pas deja
+    asin = request.form['asin']
+    locale = request.form['locale']
+    type = request.form['type']
+    email = request.form['email']
+    price = request.form['price']
+    g.db.execute('INSERT INTO unregistered_tracking (ASIN, locale, type, email, price) VALUES (?, ?, ?, ?, ?)', [asin, locale, type, email, price])
+    g.db.commit()
     
+    return 'ok'
+        
 @app.route('/product/<locale>/<asin>')
 def show_product(locale, asin):
     api = API(locale=locale)
